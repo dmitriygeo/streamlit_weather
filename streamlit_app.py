@@ -1,7 +1,34 @@
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
-from part1_analysis import get_current_temperature, check_temperature_anomaly, seasonal_profile
+import requests
+
+df = pd.read_csv('temperature_data.csv', parse_dates=['timestamp'], sep=';')
+
+def season(df):
+    seasonal_profile = df.groupby(['city', 'season']).agg(
+        mean_temp=('temperature', 'mean'),
+        std_temp=('temperature', 'std')
+    ).reset_index()
+    return seasonal_profile
+
+seasonal_profile = season(df)
+
+def get_current_temperature(city, api_key):
+    url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric'
+    response = requests.get(url)
+    data = response.json()
+    return data['main']['temp']
+
+current_temp = get_current_temperature(city='Moscow', api_key=api_key)
+
+def check_temperature_anomaly(city, current_temp, seasonal_profile, current_season):
+    city_stat = seasonal_profile[(seasonal_profile['city'] == city) & (seasonal_profile['season'] == current_season)]
+    mean_temp = city_stat['mean_temp'].values[0]
+    std_temp = city_stat['std_temp'].values[0]
+    lower_bound = mean_temp - 2 * std_temp
+    upper_bound = mean_temp + 2 * std_temp
+    return lower_bound <= current_temp <= upper_bound
 
 
 @st.cache_data
