@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from config import api_key
 import pydeck as pdk
 from part1_analysis import get_current_temperature, check_temperature_anomaly, seasonal_profile
 
