@@ -3,7 +3,6 @@ import pandas as pd
 import pydeck as pdk
 from part1_analysis import get_current_temperature, check_temperature_anomaly, seasonal_profile
 
-df = pd.read_csv('temperature_data.csv', parse_dates=['timestamp'], sep=';')
 
 @st.cache_data
 def plot_temperature_map(data):
@@ -69,10 +68,10 @@ if uploaded_file is not None:
 
         st.write('Дни с аномальными температурами в таблице ниже:')
 
-        moving_mean = df.groupby('city')['temperature'].transform(lambda x: x.rolling(window=30).mean())
-        std = df.groupby('city')['temperature'].transform(lambda x: x.rolling(window=30).std())
+        moving_mean = data.groupby('city')['temperature'].transform(lambda x: x.rolling(window=30).mean())
+        std = data.groupby('city')['temperature'].transform(lambda x: x.rolling(window=30).std())
 
-        data['anomaly'] = (df['temperature'] > moving_mean + 2 * std) | (df['temperature'] < moving_mean - 2 * std)
+        data['anomaly'] = (data['temperature'] > moving_mean + 2 * std) | (data['temperature'] < moving_mean - 2 * std)
 
         st.dataframe(data[(data['city'] == city) & (data['anomaly'])])
 
