@@ -2,7 +2,7 @@ import pandas as pd
 import time
 from joblib import Parallel, delayed
 import requests
-from config import api_key
+#from config import api_key
 
 #api_key = api_key
 
