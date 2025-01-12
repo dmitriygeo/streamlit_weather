@@ -20,7 +20,6 @@ def get_current_temperature(city, api_key):
     data = response.json()
     return data['main']['temp']
 
-current_temp = get_current_temperature(city='Moscow', api_key=api_key)
 
 def check_temperature_anomaly(city, current_temp, seasonal_profile, current_season):
     city_stat = seasonal_profile[(seasonal_profile['city'] == city) & (seasonal_profile['season'] == current_season)]
