@@ -66,7 +66,7 @@ st.title('Анализ исторических данных по темпера
 
 uploaded_file = st.file_uploader("Загрузите файл с данными", type=['csv'])
 if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file, sep=';')
+    data = pd.read_csv(uploaded_file, sep=r"[;,]")
     city = st.selectbox('Выберите город', data['city'].unique())
     api_key = st.text_input('Введите ваш API-ключ для OpenWeatherMap', type='password')
 
